@@ -17,6 +17,9 @@ import java.util.Optional;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.*;
 
@@ -30,6 +33,8 @@ class UsersEndpointTest {
     private static final User USER_TO_INSERT = new User("user_to_insert", "user_to_insert@fakemail.com", LocalDate.of(1948, 6, 21));
 
     private static final String NOT_EXISTING_ID = "9b686071-2973-4001-b0f9-6267422d45f7";
+
+    private static final User USER_WITH_DUPLICATE_USERNAME = new User("duplicate", "my@fakemail.com", LocalDate.of(1962, 7, 8));
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -45,6 +50,10 @@ class UsersEndpointTest {
         when(userService.getUserById(NOT_EXISTING_ID)).thenReturn(Optional.empty());
 
         when(userService.create(USER_TO_CREATE)).thenReturn("777");
+
+        when(userService.create(eq(USER_WITH_DUPLICATE_USERNAME))).thenThrow(new UsernameAlreadyExistsException("Username 'duplicate' already exists"));
+        doThrow(new UsernameAlreadyExistsException("Username 'duplicate' already exists"))
+                .when(userService).insert(any(), eq(USER_WITH_DUPLICATE_USERNAME));
     }
 
     @Nested
@@ -153,6 +162,12 @@ class UsersEndpointTest {
             ResponseEntity<Void> response = restTemplate.postForEntity("/api/users", userToCreate, Void.class);
             assertThat(response.getStatusCode(), is(equalTo(BAD_REQUEST)));
         }
+
+        @Test
+        public void shouldNotAllowUserWithDuplicateUsername() throws Exception {
+            ResponseEntity<Void> response = restTemplate.postForEntity("/api/users", USER_WITH_DUPLICATE_USERNAME, Void.class);
+            assertThat(response.getStatusCode(), is(equalTo(CONFLICT)));
+        }
     }
 
     @Nested
@@ -249,6 +264,18 @@ class UsersEndpointTest {
             );
 
             assertThat(response.getStatusCode(), is(equalTo(BAD_REQUEST)));
+        }
+
+        @Test
+        public void shouldNotAllowUserWithDuplicateUsername() throws Exception {
+            ResponseEntity<Void> response = restTemplate.exchange(
+                    "/api/users/" + USER_ID_TO_INSERT,
+                    HttpMethod.PUT,
+                    new HttpEntity<>(USER_WITH_DUPLICATE_USERNAME),
+                    Void.class
+            );
+
+            assertThat(response.getStatusCode(), is(equalTo(CONFLICT)));
         }
     }
 }
