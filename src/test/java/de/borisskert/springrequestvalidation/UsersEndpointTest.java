@@ -160,7 +160,7 @@ class UsersEndpointTest {
         @Test
         public void shouldInsertUser() throws Exception {
             ResponseEntity<Void> response = restTemplate.exchange(
-                    "/api/users/444",
+                    "/api/users/" + USER_ID_TO_INSERT,
                     HttpMethod.PUT,
                     new HttpEntity<>(USER_TO_INSERT),
                     Void.class
@@ -169,13 +169,24 @@ class UsersEndpointTest {
             assertThat(response.getStatusCode(), is(equalTo(OK)));
         }
 
+        @Test
+        public void shouldNotAllowToInsertUserWithIllegalId() throws Exception {
+            ResponseEntity<Void> response = restTemplate.exchange(
+                    "/api/users/444",
+                    HttpMethod.PUT,
+                    new HttpEntity<>(USER_TO_INSERT),
+                    Void.class
+            );
+
+            assertThat(response.getStatusCode(), is(equalTo(BAD_REQUEST)));
+        }
 
         @Test
         public void shouldNotAllowUserWithoutUsername() throws Exception {
             User userToCreate = new User(null, "my@fakemail.com", LocalDate.of(1944, 7, 20));
 
             ResponseEntity<Void> response = restTemplate.exchange(
-                    "/api/users/444",
+                    "/api/users/" + USER_ID_TO_INSERT,
                     HttpMethod.PUT,
                     new HttpEntity<>(userToCreate),
                     Void.class
@@ -189,7 +200,7 @@ class UsersEndpointTest {
             User userToCreate = new User("my_username", null, LocalDate.of(1944, 7, 20));
 
             ResponseEntity<Void> response = restTemplate.exchange(
-                    "/api/users/444",
+                    "/api/users/" + USER_ID_TO_INSERT,
                     HttpMethod.PUT,
                     new HttpEntity<>(userToCreate),
                     Void.class
@@ -203,7 +214,7 @@ class UsersEndpointTest {
             User userToCreate = new User("my_username", "not_a_email", LocalDate.of(1944, 7, 20));
 
             ResponseEntity<Void> response = restTemplate.exchange(
-                    "/api/users/444",
+                    "/api/users/" + USER_ID_TO_INSERT,
                     HttpMethod.PUT,
                     new HttpEntity<>(userToCreate),
                     Void.class
@@ -217,7 +228,7 @@ class UsersEndpointTest {
             User userToCreate = new User("my_username", "my@fakemail.com", null);
 
             ResponseEntity<Void> response = restTemplate.exchange(
-                    "/api/users/444",
+                    "/api/users/" + USER_ID_TO_INSERT,
                     HttpMethod.PUT,
                     new HttpEntity<>(userToCreate),
                     Void.class
@@ -231,7 +242,7 @@ class UsersEndpointTest {
             User userToCreate = new User("my_username", "my@fakemail.com", LocalDate.now().plusYears(1));
 
             ResponseEntity<Void> response = restTemplate.exchange(
-                    "/api/users/444",
+                    "/api/users/" + USER_ID_TO_INSERT,
                     HttpMethod.PUT,
                     new HttpEntity<>(userToCreate),
                     Void.class

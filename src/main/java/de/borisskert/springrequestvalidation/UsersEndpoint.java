@@ -44,7 +44,7 @@ public class UsersEndpoint {
     }
 
     @PutMapping("/{id}")
-    public void insert(@PathVariable String id, @RequestBody @Valid User user) {
+    public void insert(@PathVariable @Uuid String id, @RequestBody @Valid User user) {
         service.insert(id, user);
     }
 }
