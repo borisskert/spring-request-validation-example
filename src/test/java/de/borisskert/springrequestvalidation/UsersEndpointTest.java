@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;

@@ -12,7 +12,7 @@ import java.io.IOException;
  * https://stackoverflow.com/a/58614581
  */
 @ControllerAdvice
-public class ConstraintViolationHandler {
+public class ConstraintViolationAdvice {
 
     @ExceptionHandler(ConstraintViolationException.class)
     public void handleConstraintViolationException(
