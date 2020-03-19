@@ -55,6 +55,10 @@ public class CucumberHttpClient {
         requestEmptyBody(HttpMethod.POST, url, urlVariables);
     }
 
+    public void put(String url, Object body, Object... urlVariables) {
+        request(HttpMethod.PUT, url, body, urlVariables);
+    }
+
     public <T> void verifyLatestBody(List<T> expectedBody, TypeReference<List<T>> type) {
         Optional<ResponseEntity<String>> maybeResponse = getLastResponse();
 

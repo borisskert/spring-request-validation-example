@@ -29,7 +29,7 @@ public class UserService {
     }
 
     public String create(@RequestBody @Valid User user) {
-        String id = UUID.randomUUID().toString();
+        String id = createNewId();
         repository.save(id, user);
 
         return id;
@@ -37,5 +37,9 @@ public class UserService {
 
     public void insert(@PathVariable String id, @RequestBody @Valid User user) {
         repository.save(id, user);
+    }
+
+    private String createNewId() {
+        return UUID.randomUUID().toString();
     }
 }
