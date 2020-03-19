@@ -19,7 +19,7 @@ public class UsersEndpoint {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getUserById(@PathVariable String id) {
+    public ResponseEntity<?> getUserById(@PathVariable @Uuid String id) {
         return service.getUserById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
