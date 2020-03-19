@@ -29,6 +29,8 @@ public class UserService {
     }
 
     public String create(@RequestBody @Valid User user) {
+        throwIfUsernameExists(user.getUsername());
+
         String id = createNewId();
         repository.save(id, user);
 
@@ -36,10 +38,25 @@ public class UserService {
     }
 
     public void insert(@PathVariable String id, @RequestBody @Valid User user) {
+        throwIfIdExists(id);
+        throwIfUsernameExists(user.getUsername());
+
         repository.save(id, user);
     }
 
     private String createNewId() {
         return UUID.randomUUID().toString();
+    }
+
+    private void throwIfIdExists(String id) {
+        if (repository.getById(id).isPresent()) {
+            throw new UsernameAlreadyExistsException("Id '" + id + "' already exists");
+        }
+    }
+
+    private void throwIfUsernameExists(String username) {
+        if (repository.findByUsername(username).isPresent()) {
+            throw new UsernameAlreadyExistsException("Username '" + username + "' already exists");
+        }
     }
 }

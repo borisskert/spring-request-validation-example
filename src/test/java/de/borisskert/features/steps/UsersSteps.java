@@ -70,6 +70,16 @@ public class UsersSteps {
         usersClient.userHasBeenRetrieved(dataTable);
     }
 
+    @Then("I get a Conflict response")
+    public void iGetAConflictResponse() {
+        usersClient.userCreationWasConflicted();
+    }
+
+    @When("I insert a user with ID")
+    public void iInsertAUserWithID(UserWithId dataTable) {
+        usersClient.insert(dataTable.id, dataTable.user);
+    }
+
     @DataTableType
     public User defineUser(Map<String, String> entry) {
         return User.from(entry);

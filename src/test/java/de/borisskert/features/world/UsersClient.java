@@ -50,4 +50,8 @@ public class UsersClient {
         httpClient.verifyLatestStatus(CREATED);
         latestLocation = httpClient.getLatestResponseHeaderParam("Location");
     }
+
+    public void userCreationWasConflicted() {
+        httpClient.verifyLatestStatus(CONFLICT);
+    }
 }
