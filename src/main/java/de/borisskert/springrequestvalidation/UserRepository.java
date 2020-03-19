@@ -24,6 +24,16 @@ public class UserRepository {
     }
 
     public void save(String id, User user) {
+        throwIfUsernameExists(user);
+
         users.put(id, user);
+    }
+
+    private void throwIfUsernameExists(User user) {
+        String username = user.getUsername();
+
+        if (findByUsername(username).isPresent()) {
+            throw new UsernameAlreadyExistsException("Username '" + username + "' already exists");
+        }
     }
 }

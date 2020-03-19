@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import java.time.LocalDate;
 import java.util.Optional;
 
+import static de.borisskert.springrequestvalidation.MockUsers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -25,16 +26,6 @@ import static org.springframework.http.HttpStatus.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UsersEndpointTest {
-    private static final String USER_ONE_ID = "6e9f59fa-cc85-4096-9165-7a3661fd6bc0";
-    private static final User USER_ONE = new User("my_username", "my@fakemail.com", LocalDate.of(1990, 10, 3));
-    private static final User USER_TO_CREATE = new User("my_other_username", "my_other@fakemail.com", LocalDate.of(1945, 5, 8));
-
-    private static final String USER_ID_TO_INSERT = "2884a717-5a17-49fa-84cc-d4321207c7f9";
-    private static final User USER_TO_INSERT = new User("user_to_insert", "user_to_insert@fakemail.com", LocalDate.of(1948, 6, 21));
-
-    private static final String NOT_EXISTING_ID = "9b686071-2973-4001-b0f9-6267422d45f7";
-
-    private static final User USER_WITH_DUPLICATE_USERNAME = new User("duplicate", "my@fakemail.com", LocalDate.of(1962, 7, 8));
 
     @Autowired
     private TestRestTemplate restTemplate;
