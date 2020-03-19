@@ -3,6 +3,7 @@ package de.borisskert.features.world;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.opentest4j.AssertionFailedError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.context.annotation.Scope;
@@ -110,6 +111,17 @@ public class CucumberHttpClient {
             assertThat(response.getStatusCode(), is(equalTo(expectedStatus)));
         } else {
             fail("Got no response");
+        }
+    }
+
+    public String getLatestResponseHeaderParam(String key) {
+        Optional<ResponseEntity<String>> maybeResponse = getLastResponse();
+
+        if (maybeResponse.isPresent()) {
+            ResponseEntity<String> response = maybeResponse.get();
+            return response.getHeaders().getFirst(key);
+        } else {
+            throw new AssertionFailedError("Got no response");
         }
     }
 
