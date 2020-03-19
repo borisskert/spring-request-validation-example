@@ -2,20 +2,28 @@ package de.borisskert.springrequestvalidation;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import java.time.LocalDate;
 import java.util.Objects;
 
 public class User {
 
+    @NotEmpty
     private final String username;
+
+    @NotEmpty
+    @Email
     private final String email;
+
+    @NotNull
+    @Past
     private final LocalDate dateOfBirth;
 
     public User(
-            @NotEmpty String username,
-            @NotEmpty @Email String email,
-            @NotEmpty @Past LocalDate dateOfBirth
+            String username,
+            String email,
+            LocalDate dateOfBirth
     ) {
         this.username = username;
         this.email = email;

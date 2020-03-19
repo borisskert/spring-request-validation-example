@@ -114,6 +114,46 @@ class UsersEndpointTest {
             assertThat(response.getStatusCode(), is(equalTo(CREATED)));
             assertThat(response.getHeaders().get("Location").get(0), is(equalTo("/api/users/777")));
         }
+
+        @Test
+        public void shouldNotAllowUserWithoutUsername() throws Exception {
+            User userToCreate = new User(null, "my@fakemail.com", LocalDate.of(1944, 7, 20));
+
+            ResponseEntity<Void> response = restTemplate.postForEntity("/api/users", userToCreate, Void.class);
+            assertThat(response.getStatusCode(), is(equalTo(BAD_REQUEST)));
+        }
+
+        @Test
+        public void shouldNotAllowUserWithoutEmail() throws Exception {
+            User userToCreate = new User("my_username", null, LocalDate.of(1944, 7, 20));
+
+            ResponseEntity<Void> response = restTemplate.postForEntity("/api/users", userToCreate, Void.class);
+            assertThat(response.getStatusCode(), is(equalTo(BAD_REQUEST)));
+        }
+
+        @Test
+        public void shouldNotAllowUserWithIllegalEmail() throws Exception {
+            User userToCreate = new User("my_username", "not_a_email", LocalDate.of(1944, 7, 20));
+
+            ResponseEntity<Void> response = restTemplate.postForEntity("/api/users", userToCreate, Void.class);
+            assertThat(response.getStatusCode(), is(equalTo(BAD_REQUEST)));
+        }
+
+        @Test
+        public void shouldNotAllowUserWithoutBirthDate() throws Exception {
+            User userToCreate = new User("my_username", "my@fakemail.com", null);
+
+            ResponseEntity<Void> response = restTemplate.postForEntity("/api/users", userToCreate, Void.class);
+            assertThat(response.getStatusCode(), is(equalTo(BAD_REQUEST)));
+        }
+
+        @Test
+        public void shouldNotAllowUserWithIllegalBirthDate() throws Exception {
+            User userToCreate = new User("my_username", "my@fakemail.com", LocalDate.now().plusYears(1));
+
+            ResponseEntity<Void> response = restTemplate.postForEntity("/api/users", userToCreate, Void.class);
+            assertThat(response.getStatusCode(), is(equalTo(BAD_REQUEST)));
+        }
     }
 
     @Nested
