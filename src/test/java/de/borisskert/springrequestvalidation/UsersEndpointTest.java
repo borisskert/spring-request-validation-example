@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -87,6 +88,20 @@ class UsersEndpointTest {
             ResponseEntity<User> response = restTemplate.getForEntity("/api/users?username=h4xx0r", User.class);
 
             assertThat(response.getStatusCode(), is(equalTo(NOT_FOUND)));
+        }
+
+        @Test
+        public void shouldAcceptTooShortUsername() throws Exception {
+            ResponseEntity<User> response = restTemplate.getForEntity("/api/users?username=ccc", User.class);
+
+            assertThat(response.getStatusCode(), is(equalTo(BAD_REQUEST)));
+        }
+
+        @Test
+        public void shouldAcceptTooLongUsername() throws Exception {
+            ResponseEntity<User> response = restTemplate.getForEntity("/api/users?username=mycrazyusernamewhichistolong", User.class);
+
+            assertThat(response.getStatusCode(), is(equalTo(BAD_REQUEST)));
         }
     }
 

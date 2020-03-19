@@ -2,13 +2,16 @@ package de.borisskert.springrequestvalidation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Size;
 import java.net.URI;
 
 @RestController
 @RequestMapping("/api/users")
+@Validated
 public class UsersEndpoint {
 
     private final UserService service;
@@ -26,7 +29,7 @@ public class UsersEndpoint {
     }
 
     @GetMapping(params = "username")
-    public ResponseEntity<?> findByUsername(@RequestParam String username) {
+    public ResponseEntity<?> findByUsername(@RequestParam @Size(min = 6, max = 12) String username) {
         return service.findByUsername(username)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
